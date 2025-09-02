@@ -101,11 +101,12 @@
 
                             @if($company->categories->count() > 0)
                                 <div class="mt-4 p-4 bg-gray-50 rounded-lg">
-                                    <h3 class="font-medium text-gray-900 mb-2">Categories</h3>
+                                    <h3 class="font-medium text-gray-900 mb-3">Categories</h3>
                                     <div class="flex flex-wrap gap-2">
                                         @foreach($company->categories as $category)
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" 
+                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium shadow-sm" 
                                                   style="background-color: {{ $category->color }}20; color: {{ $category->color }}; border: 1px solid {{ $category->color }}40;">
+                                                <div class="w-2 h-2 rounded-full mr-2" style="background-color: {{ $category->color }}"></div>
                                                 {{ $category->name }}
                                             </span>
                                         @endforeach

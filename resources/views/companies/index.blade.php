@@ -79,13 +79,14 @@
                                                 @if($company->categories->count() > 0)
                                                     <div class="flex flex-wrap gap-1">
                                                         @foreach($company->categories->take(3) as $category)
-                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium" 
+                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium shadow-sm" 
                                                                   style="background-color: {{ $category->color }}20; color: {{ $category->color }}; border: 1px solid {{ $category->color }}40;">
+                                                                <div class="w-1.5 h-1.5 rounded-full mr-1.5" style="background-color: {{ $category->color }}"></div>
                                                                 {{ $category->name }}
                                                             </span>
                                                         @endforeach
                                                         @if($company->categories->count() > 3)
-                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 shadow-sm">
                                                                 +{{ $company->categories->count() - 3 }}
                                                             </span>
                                                         @endif

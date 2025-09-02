@@ -111,19 +111,50 @@
 
                         <!-- Categories -->
                         <div class="mt-6">
-                            <label for="categories" class="block text-sm font-medium text-gray-700">Categories</label>
-                            <div class="mt-1">
-                                <select name="categories[]" id="categories" multiple
-                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" 
-                                                {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Categories</label>
+                            
+                            <!-- Filter/View Options -->
+                            <div class="mb-3 space-y-3">
+                                <!-- Search Box -->
+                                <div class="relative">
+                                    <input type="text" 
+                                           id="categorySearch" 
+                                           placeholder="Search categories..." 
+                                           class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <svg class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="flex items-center space-x-4">
+                                    <button type="button" id="selectAllCategories" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                        Select All
+                                    </button>
+                                    <button type="button" id="clearAllCategories" class="text-sm text-gray-600 hover:text-gray-800 font-medium">
+                                        Clear All
+                                    </button>
+                                    <span class="text-sm text-gray-500">
+                                        <span id="selectedCount">0</span> of {{ $categories->count() }} selected
+                                    </span>
+                                </div>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">Hold Ctrl/Cmd to select multiple categories</p>
+                            
+                            <!-- Scrollable Category List -->
+                            <div class="max-h-48 overflow-y-auto border border-gray-300 rounded-md p-3 bg-white">
+                                @foreach($categories as $category)
+                                    <label class="flex items-center py-2 hover:bg-gray-50 cursor-pointer rounded px-2 transition-colors duration-150">
+                                        <input type="checkbox" 
+                                               name="categories[]" 
+                                               value="{{ $category->id }}"
+                                               {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700">{{ $category->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            
+                            <p class="mt-2 text-sm text-gray-500">Select multiple categories for this company</p>
                             @error('categories.*')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -179,4 +210,64 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Category selection functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryCheckboxes = document.querySelectorAll('input[name="categories[]"]');
+            const selectAllBtn = document.getElementById('selectAllCategories');
+            const clearAllBtn = document.getElementById('clearAllCategories');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const searchInput = document.getElementById('categorySearch');
+            const categoryLabels = document.querySelectorAll('label[class*="flex items-center py-2"]');
+
+            // Update selected count
+            function updateSelectedCount() {
+                const selectedCount = document.querySelectorAll('input[name="categories[]"]:checked').length;
+                selectedCountSpan.textContent = selectedCount;
+            }
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                categoryLabels.forEach(label => {
+                    const categoryName = label.querySelector('span').textContent.toLowerCase();
+                    if (categoryName.includes(searchTerm)) {
+                        label.style.display = 'flex';
+                    } else {
+                        label.style.display = 'none';
+                    }
+                });
+            });
+
+            // Select all visible categories
+            selectAllBtn.addEventListener('click', function() {
+                const visibleCheckboxes = Array.from(categoryLabels)
+                    .filter(label => label.style.display !== 'none')
+                    .map(label => label.querySelector('input'));
+                
+                visibleCheckboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                updateSelectedCount();
+            });
+
+            // Clear all categories
+            clearAllBtn.addEventListener('click', function() {
+                categoryCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedCount();
+            });
+
+            // Update count when checkboxes change
+            categoryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Initialize count
+            updateSelectedCount();
+        });
+    </script>
 </x-app-layout>
