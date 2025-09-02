@@ -98,6 +98,20 @@
                                     <p class="text-gray-700">{{ $company->notes }}</p>
                                 </div>
                             @endif
+
+                            @if($company->categories->count() > 0)
+                                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                    <h3 class="font-medium text-gray-900 mb-2">Categories</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($company->categories as $category)
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" 
+                                                  style="background-color: {{ $category->color }}20; color: {{ $category->color }}; border: 1px solid {{ $category->color }}40;">
+                                                {{ $category->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

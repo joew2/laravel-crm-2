@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\CompanyFile;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::withCount('contacts')
+        $companies = Company::with(['categories'])
+            ->withCount('contacts')
             ->orderBy('name')
             ->paginate(15);
 
@@ -28,7 +30,8 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('companies.create');
+        $categories = Category::active()->orderBy('name')->get();
+        return view('companies.create', compact('categories'));
     }
 
     /**
@@ -49,6 +52,8 @@ class CompanyController extends Controller
             'notes' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'files.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:10240',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ]);
 
         if ($validator->fails()) {
@@ -57,7 +62,7 @@ class CompanyController extends Controller
                 ->withInput();
         }
 
-        $company = Company::create($request->except(['logo', 'files']));
+        $company = Company::create($request->except(['logo', 'files', 'categories']));
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
@@ -81,6 +86,11 @@ class CompanyController extends Controller
             }
         }
 
+        // Handle categories
+        if ($request->has('categories')) {
+            $company->categories()->sync($request->categories);
+        }
+
         return redirect()->route('companies.show', $company)
             ->with('success', 'Company created successfully.');
     }
@@ -90,7 +100,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        $company->load(['contacts', 'files']);
+        $company->load(['contacts', 'files', 'categories']);
         return view('companies.show', compact('company'));
     }
 
@@ -99,7 +109,9 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        return view('companies.edit', compact('company'));
+        $categories = Category::active()->orderBy('name')->get();
+        $company->load('categories');
+        return view('companies.edit', compact('company', 'categories'));
     }
 
     /**
@@ -120,6 +132,8 @@ class CompanyController extends Controller
             'notes' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'files.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:10240',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ]);
 
         if ($validator->fails()) {
@@ -128,7 +142,7 @@ class CompanyController extends Controller
                 ->withInput();
         }
 
-        $company->update($request->except(['logo', 'files']));
+        $company->update($request->except(['logo', 'files', 'categories']));
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
@@ -156,6 +170,9 @@ class CompanyController extends Controller
                 ]);
             }
         }
+
+        // Handle categories
+        $company->categories()->sync($request->categories ?? []);
 
         return redirect()->route('companies.show', $company)
             ->with('success', 'Company updated successfully.');
@@ -196,5 +213,23 @@ class CompanyController extends Controller
 
         return redirect()->back()
             ->with('success', 'File deleted successfully.');
+    }
+
+    /**
+     * Sync categories for a company.
+     */
+    public function syncCategories(Request $request, Company $company)
+    {
+        $request->validate([
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+        ]);
+
+        $company->categories()->sync($request->categories ?? []);
+
+        return response()->json([
+            'message' => 'Categories updated successfully',
+            'categories' => $company->fresh()->categories
+        ]);
     }
 }

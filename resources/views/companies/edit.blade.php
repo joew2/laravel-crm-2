@@ -110,6 +110,26 @@
                             </div>
                         </div>
 
+                        <!-- Categories -->
+                        <div class="mt-6">
+                            <label for="categories" class="block text-sm font-medium text-gray-700">Categories</label>
+                            <div class="mt-1">
+                                <select name="categories[]" id="categories" multiple
+                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" 
+                                                {{ in_array($category->id, old('categories', $company->categories->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">Hold Ctrl/Cmd to select multiple categories</p>
+                            @error('categories.*')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Additional Information -->
                         <div class="mt-6">
                             <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>

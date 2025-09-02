@@ -20,6 +20,10 @@
                         {{ __('Companies') }}
                     </x-nav-link>
                     
+                    <x-nav-link href="{{ route('categories.index') }}" :active="request()->routeIs('categories.*')">
+                        {{ __('Categories') }}
+                    </x-nav-link>
+                    
                     <x-nav-link href="{{ route('contacts.index') }}" :active="request()->routeIs('contacts.*')">
                         {{ __('Contacts') }}
                     </x-nav-link>

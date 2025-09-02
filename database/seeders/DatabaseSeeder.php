@@ -49,6 +49,11 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        // Seed categories first
+        // $this->call([
+        //     CategorySeeder::class,
+        // ]);
+
         // Create sample companies if none exist
         if (Company::count() === 0) {
             $companies = [
