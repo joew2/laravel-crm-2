@@ -29,44 +29,7 @@
                     </x-nav-link>
                 </div>
 
-                <!-- Search Bar -->
-                <div class="flex items-center space-x-4">
-                    <form action="{{ route('search.general') }}" method="GET" class="flex items-center">
-                        <div class="relative">
-                            <input type="text" 
-                                   name="q" 
-                                   placeholder="Search contacts & companies..." 
-                                   class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                   value="{{ request('q') }}">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Search
-                        </button>
-                    </form>
-                    
-                    <!-- Advanced Search Dropdown -->
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" type="button" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Advanced
-                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('search.advanced') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Advanced Search
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -200,31 +163,7 @@
 
             <!-- Responsive Navigation Menu -->
         <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-            <!-- Mobile Search -->
-            <div class="px-4 py-3 border-b border-gray-200">
-                <form action="{{ route('search.general') }}" method="GET" class="flex items-center">
-                    <div class="relative flex-1">
-                        <input type="text" 
-                               name="q" 
-                               placeholder="Search contacts & companies..." 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                               value="{{ request('q') }}">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Search
-                    </button>
-                </form>
-                <div class="mt-2">
-                    <a href="{{ route('search.advanced') }}" class="text-sm text-blue-600 hover:text-blue-800">
-                        Advanced Search
-                    </a>
-                </div>
-            </div>
+
 
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">

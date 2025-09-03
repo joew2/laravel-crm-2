@@ -1,27 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Search Results
-                </h2>
-                @if(isset($query))
-                    <p class="text-sm text-gray-600 mt-1">
-                        Found {{ $contacts->total() }} result(s) for "{{ $query }}"
-                    </p>
-                @endif
-            </div>
+        <x-page-header title="Search Results" :showSearch="false">
             <a href="{{ route('search.advanced') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
                 </svg>
                 Advanced Search
             </a>
-        </div>
+        </x-page-header>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if(isset($query))
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">
+                        Found {{ $contacts->total() }} result(s) for "{{ $query }}"
+                    </p>
+                </div>
+            @endif
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
                     @if($contacts->count() > 0)
