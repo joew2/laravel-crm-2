@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,4 +33,9 @@ Route::middleware([
     Route::resource('contacts', ContactController::class);
     Route::get('companies/{company}/contacts', [ContactController::class, 'companyContacts'])
         ->name('companies.contacts');
+
+    // Search Routes
+    Route::get('search', [SearchController::class, 'generalSearch'])->name('search.general');
+    Route::get('search/advanced', [SearchController::class, 'advancedSearch'])->name('search.advanced');
+    Route::get('search/advanced/results', [SearchController::class, 'advancedSearchResults'])->name('search.advanced.results');
 });
